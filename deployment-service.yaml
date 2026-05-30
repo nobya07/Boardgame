@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boardgame-deployment
+spec:
+  replicas: 3
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: boardgame
+
+  template:
+    metadata:
+      labels:
+        app: boardgame
+
+    spec:
+      containers:
+        - name: boardgame
+<<<<<<< HEAD
+          image: gajendra1/boardshack:latest
+=======
+          image: gajendra1/boardshack:latest # Image that will be used to containers in the cluster
+>>>>>>> 3fa7fb5de044f75a439ff32cf110a3c8f9879b16
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: boardgame-ssvc
+
+spec:
+  type: NodePort
+
+  selector:
+    app: boardgame
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+<<<<<<< HEAD
+      nodePort: 30007
+=======
+      nodePort: 30007
+  type: LoadBalancer # type of the service.
+>>>>>>> 3fa7fb5de044f75a439ff32cf110a3c8f9879b16

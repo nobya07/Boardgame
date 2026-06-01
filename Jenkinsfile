@@ -116,7 +116,7 @@ pipeline {
                     credentialsId: 'k8-cred',
                     namespace: 'webapps',
                     restrictKubeConfigAccess: false,
-                    serverUrl: 'https://172.31.14.152:6443'
+                    serverUrl: 'https://13.207.66.28:6443'
                 ) {
                     sh 'kubectl apply -f deployment-service.yaml'
                 }
@@ -132,7 +132,7 @@ pipeline {
                     credentialsId: 'k8-cred',
                     namespace: 'webapps',
                     restrictKubeConfigAccess: false,
-                    serverUrl: 'https://172.31.14.152:6443'
+                    serverUrl: 'https://13.207.66.28:6443'
                 ) {
                     sh 'kubectl get pods -n webapps'
                     sh 'kubectl get svc -n webapps'

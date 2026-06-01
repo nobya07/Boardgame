@@ -48,7 +48,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 script {
-                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar-cred' 
                 }
             }
         }
@@ -68,33 +68,31 @@ pipeline {
         }
         
         stage('Build & Tag Docker Image') {
-            steps {
-               script {
-                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker')  {
-                            sh "docker build -t gajendra1/boardshack:latest ."
-                    }
-               }
-            }
+    steps {
+        script {
+            sh 'docker build -t gajendra1/boardshack:latest .'
         }
+    }
+}
         
         stage('Docker Image Scan') {
-            steps {
-                sh "trivy image --format table -o trivy-image-report.html gajendra1/boardshack:latest "
-            }
-        }
+    steps {
+        sh 'trivy image --format table -o trivy-image-report.html gajendra1/boardshack:latest'
+    }
+}
         
         stage('Push Docker Image') {
-            steps {
-               script {
-                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                            sh "docker push gajendra1/boardshack:latest"
-                    }
-               }
+    steps {
+        script {
+            withDockerRegistry(credentialsId: 'docker-cred') {
+                sh 'docker push gajendra1/boardshack:latest'
             }
         }
+    }
+}
         stage('Deploy To Kubernetes') {
             steps {
-               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://13.207.66.28:6443') {
+               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.14.152:6443) {
                         sh "kubectl apply -f deployment-service.yaml"
                 }
             }
@@ -102,7 +100,7 @@ pipeline {
         
         stage('Verify the Deployment') {
             steps {
-               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://13.207.66.28:6443') {
+               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.14.152:6443) {
                         sh "kubectl get pods -n webapps"
                         sh "kubectl get svc -n webapps"
                 }

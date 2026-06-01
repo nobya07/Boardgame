@@ -23,11 +23,7 @@ spec:
     spec:
       containers:
         - name: boardgame
-<<<<<<< HEAD
           image: gajendra1/boardshack:latest
-=======
-          image: gajendra1/boardshack:latest # Image that will be used to containers in the cluster
->>>>>>> 3fa7fb5de044f75a439ff32cf110a3c8f9879b16
           imagePullPolicy: Always
 
           ports:
@@ -67,8 +63,7 @@ metadata:
   name: boardgame-ssvc
 
 spec:
-  type: NodePort
-
+  type: LoadBalancer
   selector:
     app: boardgame
 
@@ -76,9 +71,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-<<<<<<< HEAD
       nodePort: 30007
-=======
-      nodePort: 30007
-  type: LoadBalancer # type of the service.
->>>>>>> 3fa7fb5de044f75a439ff32cf110a3c8f9879b16

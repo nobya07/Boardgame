@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: boardgame-deployment
+  namespace: webapps
+
 spec:
   replicas: 3
 
@@ -30,22 +32,16 @@ spec:
             - containerPort: 8080
 
           readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-
-          livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 90
             periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 5
 
           resources:
             requests:
@@ -61,9 +57,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: boardgame-ssvc
+  namespace: webapps
 
 spec:
   type: LoadBalancer
+
   selector:
     app: boardgame
 

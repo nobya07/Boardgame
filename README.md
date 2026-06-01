@@ -1,4 +1,4 @@
-# 🎲 Boardgame — DevOps CI/CD Project
+# 🎲 Boardgame — DevSecOps CI/CD Project
 
 A complete end-to-end CI/CD pipeline for a Spring Boot application, automated from code push to Kubernetes deployment.
 
